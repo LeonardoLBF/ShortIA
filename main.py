@@ -1,34 +1,29 @@
-import vertexai
-from vertexai.generative_models import GenerativeModel
+name: Executar ShortIA Limpo
 
-PROJECT_ID = "leonardlbf"
-LOCATION = "us-central1"
+on: [push]
 
+jobs:
+  run-python-script:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar codigo do repositorio
+        uses: actions/checkout@v4
 
-def main():
-  print("=== ShortIA: Iniciando no projeto leonardlbf ===")
+      - name: Autenticar no Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
 
-  try:
-    vertexai.init(project=PROJECT_ID, location=LOCATION)
-    model = GenerativeModel("gemini-1.5-flash")
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
 
-    print("Conexão com o Vertex AI estabelecida com sucesso!")
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
 
-    response = model.generate_content(
-    "Crie 3 ideias de títulos muito chamativos, criativos e virais para um"
-    " vídeo curto de tecnologia focado em inteligência artificial."
-)
-
-    print("\n--- Resposta da IA ---")
-    print(response.text)
-    print("----------------------")
-
-  except Exception as e:
-    print(f"Ocorreu um erro na execução: {e}")
-
-
-if __name__ == "__main__":
-  main()
-
-
-
+      - name: Executar o script principal
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
+        run: python main.py
