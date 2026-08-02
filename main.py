@@ -1,12 +1,28 @@
 import os
+import google.generativeai as genai
 
-# Pega a chave secreta chamada SHORTIA que configuramos no GitHub
+# 1. Recupera a chave secreta guardada no GitHub Actions
 api_key = os.getenv("SHORTIA")
 
-print("Olá! Meu projeto no GitHub começou a funcionar!")
-
-if api_key:
-  print("Tudo certo: a chave secreta foi lida com segurança!")
+if not api_key:
+  print("Atenção: A chave de API não foi encontrada nas variáveis de ambiente.")
 else:
-  print("Atenção: a chave não foi encontrada.")
+  print("Chave de API carregada com segurança!")
+
+  # 2. Configura a Inteligência Artificial com a sua chave
+  genai.configure(api_key=api_key)
+
+  # 3. Escolhe o modelo de IA que vai responder (Gemini)
+  model = genai.GenerativeModel("gemini-1.5-flash")
+
+  # 4. Envia uma mensagem de teste para a IA
+  print("Conectando com a IA...")
+  response = model.generate_content(
+      "Escreva uma frase curta e motivacional sobre começar a programar."
+  )
+
+  print("\n--- Resposta da Inteligência Artificial ---")
+  print(response.text)
+  print("------------------------------------------")
+
 
