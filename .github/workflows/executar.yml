@@ -1,0 +1,21 @@
+name: Executar ShortIA
+
+on: [push]
+
+jobs:
+  run-python-script:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar codigo do repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Executar o script principal
+        env:
+          SHORTIA: ${{ secrets.SHORTIA }}
+        run: python main.py
+
