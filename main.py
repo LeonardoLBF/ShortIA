@@ -1,28 +1,34 @@
-import os
-import google.generativeai as genai
+import vertexai
+from vertexai.generative_models import GenerativeModel
 
-# 1. Recupera a chave secreta guardada no GitHub Actions
-api_key = os.getenv("SHORTIA")
+PROJECT_ID = "leonardlbf"
+LOCATION = "us-central1"
 
-if not api_key:
-  print("Atenção: A chave de API não foi encontrada nas variáveis de ambiente.")
-else:
-  print("Chave de API carregada com segurança!")
 
-  # 2. Configura a Inteligência Artificial com a sua chave
-  genai.configure(api_key=api_key)
+def main():
+  print("=== ShortIA: Iniciando no projeto leonardlbf ===")
 
-  # 3. Escolhe o modelo de IA que vai responder (Gemini)
-  model = genai.GenerativeModel("gemini-1.5-flash")
+  try:
+    vertexai.init(project=PROJECT_ID, location=LOCATION)
+    model = GenerativeModel("gemini-1.5-flash")
 
-  # 4. Envia uma mensagem de teste para a IA
-  print("Conectando com a IA...")
-  response = model.generate_content(
-      "Escreva uma frase curta e motivacional sobre começar a programar."
-  )
+    print("Conexão com o Vertex AI estabelecida com sucesso!")
 
-  print("\n--- Resposta da Inteligência Artificial ---")
-  print(response.text)
-  print("------------------------------------------")
+    response = model.generate_content(
+        "Escreva uma frase curta confirmando que o sistema ShortIA está"
+        " operando perfeitamente."
+    )
+
+    print("\n--- Resposta da IA ---")
+    print(response.text)
+    print("----------------------")
+
+  except Exception as e:
+    print(f"Ocorreu um erro na execução: {e}")
+
+
+if __name__ == "__main__":
+  main()
+
 
 
