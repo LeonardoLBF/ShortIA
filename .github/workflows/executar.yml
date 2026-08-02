@@ -1,4 +1,4 @@
-name: Executar ShortIA Simples
+name: Executar ShortIA Vertex AI
 
 on: [push]
 
@@ -15,9 +15,12 @@ jobs:
           python-version: '3.10'
 
       - name: Instalar dependencias
-        run: pip install google-generativeai
+        run: pip install -r requirements.txt
+
+      - name: Configurar Credenciais do Google Cloud
+        run: |
+          echo "${{ secrets.GCP_SA_KEY }}" | base64 -d > /tmp/credentials.json
+          echo "GOOGLE_APPLICATION_CREDENTIALS=/tmp/credentials.json" >> $GITHUB_ENV
 
       - name: Executar o script principal
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: python main.py
