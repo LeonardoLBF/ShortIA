@@ -1,4 +1,5 @@
-name: Executar ShortIA
+
+name: Executar ShortIA Limpo
 
 on: [push]
 
@@ -8,6 +9,12 @@ jobs:
     steps:
       - name: Baixar codigo do repositorio
         uses: actions/checkout@v4
+
+      - name: Autenticar no Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
 
       - name: Configurar Python
         uses: actions/setup-python@v5
@@ -19,6 +26,5 @@ jobs:
 
       - name: Executar o script principal
         env:
-          SHORTIA: ${{ secrets.SHORTIA }}
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
         run: python main.py
-
