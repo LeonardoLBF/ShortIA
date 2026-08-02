@@ -15,9 +15,9 @@ def main():
     print("Conexão com o Vertex AI estabelecida com sucesso!")
 
     response = model.generate_content(
-        "Escreva uma frase curta confirmando que o sistema ShortIA está"
-        " operando perfeitamente."
-    )
+    "Crie 3 ideias de títulos muito chamativos, criativos e virais para um"
+    " vídeo curto de tecnologia focado em inteligência artificial."
+)
 
     print("\n--- Resposta da IA ---")
     print(response.text)
